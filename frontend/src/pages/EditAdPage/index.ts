@@ -1,0 +1,1 @@
+export { EditAdPage } from './EditAdPage';
