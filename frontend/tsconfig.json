@@ -9,12 +9,13 @@
     "baseUrl": ".",
     "paths": {
       "@api/*": ["./src/api/*"],
-      "@assets/*": ["./src/api/*"],
+      "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@pages/*": ["./src/pages/*"],
       "@store/*": ["./src/store/*"],
-      "@types/*": ["./src/types/*"],
-      "@types": ["./src/types"]
+      "@types": ["./src/types"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@shared/*": ["./src/shared/*"]
     },
 
     /* Bundler mode */

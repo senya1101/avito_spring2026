@@ -1,8 +1,8 @@
-import { Category, Item } from "./ads";
-
+import { Category, Item } from './ads';
 
 /** Упрощенная модель объявления для отображения в общем списке */
 export interface ListItem {
+  id: number;
   category: Category;
   title: string;
   price: number;
@@ -30,6 +30,10 @@ export interface ItemFilters {
   skip?: number;
   needsRevision?: boolean;
   categories?: Category[];
-  sortColumn?: 'title' | 'createdAt';
-  sortDirection?: 'asc' | 'desc';
+  sortColumn?: SortColumn;
+  sortDirection?: SortDirection;
 }
+
+export type SortColumn = 'title' | 'createdAt';
+export type SortDirection = 'asc' | 'desc';
+export type SortValue = `${SortColumn}_${SortDirection}`;

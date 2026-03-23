@@ -1,0 +1,10 @@
+#root .ant-list .ant-row > div,
+#root .ant-list .ant-row .ant-col:first-child {
+  display: flex;
+}
+#root .ant-list .ant-row .ant-list-item {
+  flex: 1 1 auto;
+}
+#root .ant-list .ant-row .ant-list-item .ant-card {
+  height: 100%;
+}

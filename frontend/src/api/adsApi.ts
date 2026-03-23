@@ -8,7 +8,7 @@ import type {
 
 export const adsApi = createApi({
   reducerPath: 'adsApi',
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_BASE_URL }),
   tagTypes: ['Ads'],
   endpoints: (builder) => ({
     getAds: builder.query<ItemsGetOut, ItemFilters>({

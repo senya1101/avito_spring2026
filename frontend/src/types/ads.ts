@@ -36,7 +36,7 @@ export type ItemParams =
 
 /** Базовая модель объявления со всеми данными */
 export interface Item {
-  id: string;
+  id: number;
   category: Category;
   title: string;
   description?: string;

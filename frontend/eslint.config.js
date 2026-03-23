@@ -30,7 +30,7 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      'prettier/prettier': 'error', // Shows Prettier issues as ESLint errors
+      'prettier/prettier': 'error', 
       '@typescript-eslint/no-unused-vars': ['warn'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
