@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller, useForm } from 'react-hook-form';
 import {
   Typography,
   Select,
@@ -27,9 +27,11 @@ export const EditAdPage = () => {
   const { data: ad, isFetching, isError } = useGetAdByIdQuery(id!);
   const [updateAd, { isLoading: isUpdating }] = useUpdateAdMutation();
 
-  const { control, handleSubmit, watch, reset } = useForm<ItemUpdateIn>({
+  const { control, handleSubmit, reset, watch } = useForm<ItemUpdateIn>({
     defaultValues: ad,
   });
+
+  const selectedCategory = watch('category') as Category;
 
   useEffect(() => {
     if (ad) {
@@ -132,21 +134,23 @@ export const EditAdPage = () => {
         </Typography.Title>
 
         <Flex gap={12} vertical>
-          {CATEGORY_FIELDS[ad.category]?.map((fieldName) => {
-            const meta = FIELD_METADATA[fieldName];
-            if (!meta) return null;
+          {CATEGORY_FIELDS[selectedCategory || ad.category]?.map(
+            (fieldName) => {
+              const meta = FIELD_METADATA[fieldName];
+              if (!meta) return null;
 
-            return (
-              <DynamicField
-                key={fieldName}
-                name={fieldName}
-                label={meta.label}
-                type={meta.type}
-                options={meta.options}
-                control={control}
-              />
-            );
-          })}
+              return (
+                <DynamicField
+                  key={fieldName}
+                  name={fieldName}
+                  label={meta.label}
+                  type={meta.type}
+                  options={meta.options}
+                  control={control as unknown as Control}
+                />
+              );
+            },
+          )}
         </Flex>
 
         <Divider />

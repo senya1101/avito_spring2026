@@ -10,7 +10,6 @@ import {
   Space,
   Empty,
   List,
-  Spin,
   Pagination,
 } from 'antd';
 import { useGetAdsQuery } from '@api/adsApi';
