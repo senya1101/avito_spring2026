@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { adsApi } from '@api/adsApi';
 import adsReducer from './slices/adsSlice';
+import aiReducer from './slices/aiSlice';
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
@@ -10,6 +11,7 @@ import {
 const rootReducer = combineReducers({
   [adsApi.reducerPath]: adsApi.reducer,
   ads: adsReducer,
+  ai: aiReducer,
 });
 
 export const store = configureStore({

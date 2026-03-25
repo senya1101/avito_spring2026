@@ -138,7 +138,6 @@ fastify.put<ItemUpdateRequest>("/items/:id", (request, reply) => {
       .send({ success: false, error: "Item with requested id doesn't exist" });
     return;
   }
-  console.log(itemId, request);
   try {
     const parsedData = ItemUpdateInSchema.parse({
       category: ITEMS[itemIndex].category,

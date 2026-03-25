@@ -1,0 +1,1 @@
+export { AiPrompt } from './AiPromt';

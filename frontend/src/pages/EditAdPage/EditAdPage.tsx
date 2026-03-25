@@ -12,6 +12,7 @@ import {
   message,
   Skeleton,
   Space,
+  InputNumber,
 } from 'antd';
 
 import { DynamicField } from '@components/DynamicField';
@@ -19,17 +20,28 @@ import { Category, ItemUpdateIn } from '@types';
 import { FIELD_METADATA } from './lib/formConfig';
 import { CATEGORY_FIELDS } from '@shared/constants';
 import { useGetAdByIdQuery, useUpdateAdMutation } from '@api/adsApi';
+import { AiPrompt } from '@components/AiPrompt';
+import { useDispatch, useSelector } from '@store/store';
+import {
+  fetchAiDescription,
+  fetchAiPrice,
+  clearAiData,
+} from '@store/slices/aiSlice';
 
 export const EditAdPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { data: ad, isFetching, isError } = useGetAdByIdQuery(id!);
   const [updateAd, { isLoading: isUpdating }] = useUpdateAdMutation();
 
-  const { control, handleSubmit, reset, watch } = useForm<ItemUpdateIn>({
-    defaultValues: ad,
-  });
+  const { control, handleSubmit, reset, watch, setValue } =
+    useForm<ItemUpdateIn>({
+      defaultValues: ad,
+    });
+
+  const { description, price } = useSelector((state) => state.ai);
 
   const selectedCategory = watch('category') as Category;
 
@@ -101,7 +113,7 @@ export const EditAdPage = () => {
         <Divider />
 
         <Flex vertical gap={16}>
-          <Space direction="vertical" style={{ width: '100%' }}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
             <Typography.Text strong>Название</Typography.Text>
             <Controller
               name="title"
@@ -110,20 +122,31 @@ export const EditAdPage = () => {
             />
           </Space>
 
-          <Space direction="vertical" style={{ width: '100%' }}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
             <Typography.Text strong>Цена (₽)</Typography.Text>
-            <Controller
-              name="price"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="number"
-                  size="large"
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              )}
-            />
+            <Flex align="center" gap={8}>
+              <Controller
+                name="price"
+                control={control}
+                render={({ field }) => (
+                  <InputNumber {...field} style={{ width: '100%' }} />
+                )}
+              />
+              <AiPrompt<number>
+                label="Узнать рыночную цену"
+                fieldName="price"
+                aiValue={price.value}
+                aiDisplayValue={price.display}
+                isLoading={price.isLoading}
+                isError={price.isError}
+                onFetch={() => dispatch(fetchAiPrice(watch()))}
+                onApply={(val) => {
+                  setValue('price', val);
+                  dispatch(clearAiData());
+                }}
+                onCancel={() => dispatch(clearAiData())}
+              />
+            </Flex>
           </Space>
         </Flex>
 
@@ -155,15 +178,28 @@ export const EditAdPage = () => {
 
         <Divider />
 
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <Typography.Text strong>Описание</Typography.Text>
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <Input.TextArea {...field} rows={4} size="large" />
-            )}
-          />
+        <Space orientation="vertical" style={{ width: '100%' }}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => <Input.TextArea {...field} rows={6} />}
+            />
+            <AiPrompt<string>
+              label="Улучшить описание"
+              fieldName="description"
+              aiValue={description.value}
+              aiDisplayValue={description.value}
+              isLoading={description.isLoading}
+              isError={description.isError}
+              onFetch={() => dispatch(fetchAiDescription(watch()))}
+              onApply={(val) => {
+                setValue('description', val);
+                dispatch(clearAiData());
+              }}
+              onCancel={() => dispatch(clearAiData())}
+            />
+          </Space>
         </Space>
 
         <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
