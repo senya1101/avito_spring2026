@@ -1,6 +1,10 @@
-import { AutoItemParams, ElectronicsItemParams, RealEstateItemParams } from "@types";
+import {
+  AutoItemParams,
+  ElectronicsItemParams,
+  RealEstateItemParams,
+} from '@types';
 
-export const labels: Record<string, string> = {
+export const PARAMS_LABELS: Record<string, string> = {
   brand: 'Бренд',
   model: 'Модель',
   yearOfManufacture: 'Год выпуска',
@@ -15,7 +19,13 @@ export const labels: Record<string, string> = {
   color: 'Цвет',
 };
 
-export const translations: Record<string, string> = {
+export const BASE_LABELS: Record<string, string> = {
+  title: 'Название',
+  price: 'Цена',
+  description: 'Описание',
+};
+
+export const TRANSLATION: Record<string, string> = {
   automatic: 'Автомат',
   manual: 'Механика',
   flat: 'Квартира',

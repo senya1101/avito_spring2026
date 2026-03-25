@@ -26,8 +26,8 @@ import { useFilters } from '@hooks/useFilters';
 const gridConfig = {
   gutter: 16,
   xs: 1,
-  sm: 2,
-  md: 3,
+  sm: 1,
+  md: 2,
   lg: 3,
   xl: 4,
   xxl: 5,
@@ -118,10 +118,13 @@ export const AdsPage = () => {
               borderRadius: 12,
               padding: 20,
               marginRight: 24,
-              height: 'fit-content',
             }}
           >
-            <Space direction="vertical" size="large" style={{ width: '100%' }}>
+            <Space
+              orientation="vertical"
+              size="large"
+              style={{ width: '100%' }}
+            >
               <div>
                 <Title level={5}>Категории</Title>
                 <Checkbox.Group

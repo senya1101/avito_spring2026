@@ -1,4 +1,4 @@
-import { Popconfirm, Typography, Flex } from 'antd';
+import { Popconfirm, Typography } from 'antd';
 import { AiPromptButton } from './AiPromtButton/AiPromptButton';
 import Markdown from 'react-markdown';
 
@@ -24,7 +24,6 @@ export const AiPrompt = <T extends string | number>({
   onApply,
   onCancel,
 }: AiPromptProps<T>) => {
-  // Показываем Popconfirm только когда загрузка завершена и есть данные
   const hasResult = !!aiValue && !isLoading;
 
   return (

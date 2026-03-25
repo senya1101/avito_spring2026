@@ -6,17 +6,19 @@ import {
   Layout,
   Typography,
   Button,
-  Card,
   Space,
   Skeleton,
   Empty,
   Image,
 } from 'antd';
-import { EditOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { useGetAdByIdQuery } from '@api/adsApi';
 import { useDispatch } from '@store/store';
 import { setCurrentAd } from '@store/slices/adsSlice';
 import { DisplayParam, formatItemParams } from './lib/formatItemParams';
+import { getMissingFields } from '@shared/getMissingFields';
+import { RevisionState } from '@components/RevisionsState';
+import { formatDate } from '@shared/formatDate';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -79,13 +81,17 @@ export const AdPage = () => {
               {ad.price?.toLocaleString()} ₽
             </Title>
             <Space direction="vertical" size={0} style={{ marginTop: 8 }}>
-              <Text type="secondary" style={{ fontSize: 12 }}></Text>
-              <Text type="secondary" style={{ fontSize: 12 }}></Text>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Опубликовано: {formatDate(ad.createdAt)}
+              </Text>
+              <Text type="secondary" style={{ fontSize: 12 }}>
+                Отредактировано: {formatDate(ad.createdAt)}
+              </Text>
             </Space>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 40, marginTop: 32 }}>
+        <div style={{ display: 'flex', gap: 32, marginTop: 32 }}>
           <div style={{ flex: '0 0 450px' }}>
             <div
               style={{
@@ -103,7 +109,7 @@ export const AdPage = () => {
               />
             </div>
 
-            <div style={{ marginTop: 40 }}>
+            <div style={{ marginTop: 32 }}>
               <Title level={4}>Описание</Title>
               <Paragraph
                 style={{ fontSize: 15, color: '#444', lineHeight: '1.6' }}
@@ -113,28 +119,16 @@ export const AdPage = () => {
             </div>
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              gap: 36,
+              flexDirection: 'column',
+            }}
+          >
             {ad.needsRevision && (
-              <Card
-                style={{
-                  background: '#FDF6EC',
-                  border: '1px solid #FBEBD3',
-                  borderRadius: 12,
-                  marginBottom: 32,
-                }}
-                bodyStyle={{ padding: '16px 20px' }}
-              >
-                <Space align="start" size={12}>
-                  <ExclamationCircleFilled
-                    style={{ color: '#E6A23C', fontSize: 18, marginTop: 4 }}
-                  />
-                  <div>
-                    <Text strong style={{ color: '#664D28' }}>
-                      Требуются доработки
-                    </Text>
-                  </div>
-                </Space>
-              </Card>
+              <RevisionState missingFields={getMissingFields(ad)} />
             )}
 
             <Title level={4}>Характеристики</Title>

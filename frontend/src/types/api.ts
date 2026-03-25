@@ -21,7 +21,9 @@ export interface SingleItemGetOut extends Item {
 }
 
 /** Тип данных для отправки изменений на сервер */
-export type ItemUpdateIn = Omit<Item, 'id' | 'createdAt' | 'image'>;
+export type ItemUpdateIn = Omit<Item, 'id' | 'createdAt' | 'image'> & {
+  needsRevision: boolean;
+};
 
 /** Набор параметров для фильтрации, поиска и сортировки через API */
 export interface ItemFilters {

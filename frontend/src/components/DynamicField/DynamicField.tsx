@@ -7,6 +7,7 @@ interface DynamicFieldProps {
   control: Control;
   type: 'string' | 'number' | 'select';
   options?: { label: string; value: string | number }[];
+  onBlur: () => void;
 }
 
 export const DynamicField = ({
@@ -15,6 +16,7 @@ export const DynamicField = ({
   control,
   type,
   options,
+  onBlur,
 }: DynamicFieldProps) => (
   <div style={{ marginBottom: 16 }}>
     <Typography.Text style={{ marginBottom: 8 }}>{label}</Typography.Text>
@@ -29,6 +31,10 @@ export const DynamicField = ({
               options={options}
               style={{ width: '100%' }}
               placeholder={label}
+              onBlur={() => {
+                field.onBlur();
+                onBlur();
+              }}
             />
           );
         }
@@ -38,10 +44,24 @@ export const DynamicField = ({
               {...field}
               style={{ width: '100%' }}
               placeholder={label}
+              onBlur={() => {
+                field.onBlur();
+                onBlur();
+              }}
             />
           );
         }
-        return <Input {...field} placeholder={label} allowClear />;
+        return (
+          <Input
+            {...field}
+            placeholder={label}
+            allowClear
+            onBlur={() => {
+              field.onBlur();
+              onBlur();
+            }}
+          />
+        );
       }}
     />
   </div>

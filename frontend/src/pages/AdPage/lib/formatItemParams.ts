@@ -1,4 +1,4 @@
-import { CATEGORY_FIELDS, labels, translations } from '@shared/constants';
+import { CATEGORY_FIELDS, PARAMS_LABELS, TRANSLATION } from '@shared/constants';
 import { Item } from '@types';
 
 export interface DisplayParam {
@@ -6,13 +6,13 @@ export interface DisplayParam {
   value: string;
 }
 
-export const formatItemParams = (item: Item): DisplayParam[] => {
+export const formatItemParams = <T>(item: Item): DisplayParam[] => {
   const { category, params } = item;
 
   const fieldsToShow = CATEGORY_FIELDS[category];
 
   return fieldsToShow.map((key) => {
-    const label = labels[key];
+    const label = PARAMS_LABELS[key];
 
     const value = (params as Record<string, unknown>)[key];
 
@@ -20,7 +20,7 @@ export const formatItemParams = (item: Item): DisplayParam[] => {
       return { label, value: 'Не указано' };
     }
 
-    let displayValue: string = translations[String(value)] || String(value);
+    let displayValue: string = TRANSLATION[String(value)] || String(value);
 
     if (key === 'mileage')
       displayValue = `${Number(value).toLocaleString()} км`;
