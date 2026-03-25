@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 
 import items from "data/items.json" with { type: "json" };
 import { Item } from "src/types.ts";
@@ -20,11 +21,10 @@ fastify.use((_, __, next) =>
 );
 
 // Настройка CORS
-fastify.use((_, reply, next) => {
-  reply.setHeader("Access-Control-Allow-Origin", "*");
-  next();
+fastify.register(cors, {
+  origin: true,
+  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
 });
-
 interface ItemGetRequest extends Fastify.RequestGenericInterface {
   Params: {
     id: string;
@@ -123,7 +123,6 @@ interface ItemUpdateRequest extends Fastify.RequestGenericInterface {
 
 fastify.put<ItemUpdateRequest>("/items/:id", (request, reply) => {
   const itemId = Number(request.params.id);
-
   if (!Number.isFinite(itemId)) {
     reply
       .status(400)
@@ -139,7 +138,7 @@ fastify.put<ItemUpdateRequest>("/items/:id", (request, reply) => {
       .send({ success: false, error: "Item with requested id doesn't exist" });
     return;
   }
-
+  console.log(itemId, request);
   try {
     const parsedData = ItemUpdateInSchema.parse({
       category: ITEMS[itemIndex].category,
@@ -166,7 +165,7 @@ fastify.put<ItemUpdateRequest>("/items/:id", (request, reply) => {
 
 const port = Number(process.env.port) || 8080;
 
-fastify.listen({ port }, function (err, _address) {
+fastify.listen({ port: port, host: "0.0.0.0" }, function (err, _address) {
   if (err) {
     fastify.log.error(err);
     process.exit(1);
