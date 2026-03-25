@@ -6,9 +6,9 @@ export const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout style={{ background: '#fff', padding: '24px', minHeight: '100vh' }}>
+    <Layout style={{ padding: '24px', minHeight: '100vh' }}>
       <Empty
-        image={<ShoppingOutlined style={{ fontSize: 64, color: '#bfbfbf' }} />}
+        image={<ShoppingOutlined style={{ fontSize: 64 }} />}
         description={
           <Space direction="vertical">
             <Typography.Title level={2}>Ой! Ничего не нашлось</Typography.Title>

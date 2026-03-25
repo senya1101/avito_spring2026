@@ -105,7 +105,7 @@ export const EditAdPage = () => {
     return <Layout style={{ padding: 24 }}>Ошибка загрузки данных</Layout>;
 
   return (
-    <Layout style={{ background: '#fff', padding: '24px' }}>
+    <Layout style={{ padding: '24px' }}>
       <Flex gap={40} align="start">
         <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 800 }}>
           <Typography.Title level={3}>

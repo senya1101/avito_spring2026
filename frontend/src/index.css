@@ -8,3 +8,9 @@
 #root .ant-list .ant-row .ant-list-item .ant-card {
   height: 100%;
 }
+
+:root.dark {
+  img {
+    filter: brightness(0.7) contrast(1.1);
+  }
+}

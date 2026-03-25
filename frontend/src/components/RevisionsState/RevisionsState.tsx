@@ -14,7 +14,6 @@ export const RevisionState = ({ missingFields }: RevisionStateProps) => {
       bodyStyle={{ padding: '12px 16px 12px 50px' }}
       style={{
         borderRadius: 8,
-        backgroundColor: '#fff7e6',
       }}
     >
       <Flex gap={12}>

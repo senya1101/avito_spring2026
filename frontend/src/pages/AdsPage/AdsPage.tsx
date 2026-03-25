@@ -114,10 +114,10 @@ export const AdsPage = () => {
           <Layout.Sider
             width={280}
             style={{
-              background: '#fff',
               borderRadius: 12,
               padding: 20,
               marginRight: 24,
+              backgroundColor: 'transparent',
             }}
           >
             <Space

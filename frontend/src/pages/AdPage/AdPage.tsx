@@ -53,7 +53,7 @@ export const AdPage = () => {
     );
 
   return (
-    <Layout style={{ background: '#fff', padding: '24px', minHeight: '100vh' }}>
+    <Layout style={{ padding: '24px', minHeight: '100vh' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
         <div
           style={{
@@ -105,15 +105,17 @@ export const AdPage = () => {
                 fallback={placeholder}
                 src={ad.image}
                 alt={ad.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
               />
             </div>
 
             <div style={{ marginTop: 32 }}>
               <Title level={4}>Описание</Title>
-              <Paragraph
-                style={{ fontSize: 15, color: '#444', lineHeight: '1.6' }}
-              >
+              <Paragraph style={{ fontSize: 15, lineHeight: '1.6' }}>
                 {ad.description || 'Нет описания'}
               </Paragraph>
             </div>

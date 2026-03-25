@@ -61,7 +61,6 @@ export const ItemRow = ({ item, handleClick }: ItemProps) => {
             <Badge
               status="warning"
               style={{
-                background: '#F9F1E6',
                 borderRadius: 8,
                 padding: '2px 8px',
               }}

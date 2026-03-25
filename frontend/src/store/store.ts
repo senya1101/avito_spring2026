@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { adsApi } from '@api/adsApi';
 import adsReducer from './slices/adsSlice';
 import aiReducer from './slices/aiSlice';
+import themeReducer from './slices/themeSlice';
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   [adsApi.reducerPath]: adsApi.reducer,
   ads: adsReducer,
   ai: aiReducer,
+  theme: themeReducer,
 });
 
 export const store = configureStore({

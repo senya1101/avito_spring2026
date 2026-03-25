@@ -26,7 +26,7 @@ const NotFoundPage = lazy(() =>
 );
 
 const PageLoader = () => (
-  <Layout style={{ padding: '24px', background: '#fff' }}>
+  <Layout style={{ padding: '24px' }}>
     <Skeleton active paragraph={{ rows: 10 }} />
   </Layout>
 );
