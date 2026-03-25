@@ -30,4 +30,34 @@
 
 ИИ-интеграция сделана через универсальную обертку. Если нужно будет добавить генерацию для динамического поля, достаточно просто в FIELD_METADATA дописать hasAiIntegration: true. И дописать DynamicField
 
-### Как запустить
+### Запуск проекта
+
+С использованием Docker (Рекомендуется)
+Весь стек (Frontend, Backend, Nginx) запускается одной командой.
+
+```Bash
+docker compose up --build -d
+```
+
+Приложение: http://localhost:5173
+
+API: http://localhost:5173/api
+
+Локальный запуск (Без Docker)
+Требуется Node.js 22+.
+
+Backend:
+
+```bash
+cd server && npm install && npm start
+```
+
+(Запускается на http://localhost:8080)
+
+Frontend:
+
+```Bash
+cd frontend && npm install && npm run dev
+```
+
+(Запускается на http://localhost:5173)

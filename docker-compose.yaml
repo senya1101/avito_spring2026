@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: ./server
+    networks:
+      - net
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
