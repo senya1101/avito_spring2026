@@ -31,13 +31,14 @@ export const getMissingFields = (item: ItemUpdateIn | undefined): string[] => {
 
   if (requiredParams) {
     requiredParams.forEach((key) => {
-      const value = item.params[key];
+      //Можно доработать тип Item с дженериком для params и тогда такого не будет
+      const value = (item.params as Record<string, unknown>)[key];
 
       if (isValueEmpty(value)) {
         missing.push(PARAMS_LABELS[key as string] || (key as string));
       }
     });
   }
-  console.log(missing);
+
   return missing;
 };

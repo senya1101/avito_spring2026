@@ -1,4 +1,4 @@
-import { CheckCircleFilled, ExclamationCircleFilled } from '@ant-design/icons';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Card, Flex, Typography } from 'antd';
 
 interface RevisionStateProps {

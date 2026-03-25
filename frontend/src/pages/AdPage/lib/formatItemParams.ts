@@ -6,7 +6,7 @@ export interface DisplayParam {
   value: string;
 }
 
-export const formatItemParams = <T>(item: Item): DisplayParam[] => {
+export const formatItemParams = (item: Item): DisplayParam[] => {
   const { category, params } = item;
 
   const fieldsToShow = CATEGORY_FIELDS[category];
