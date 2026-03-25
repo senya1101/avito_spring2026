@@ -32,7 +32,7 @@
 
 ### Запуск проекта
 
-С использованием Docker (Рекомендуется)
+С использованием Docker
 Весь стек (Frontend, Backend, Nginx) запускается одной командой.
 
 ```Bash
@@ -43,8 +43,20 @@ docker compose up --build -d
 
 API: http://localhost:5173/api
 
-Локальный запуск (Без Docker)
+Локальный запуск
 Требуется Node.js 22+.
+Настройка окружения (.env)
+Создайте файл .env в директории frontend и добавьте следующие переменные:
+
+Фрагмент кода
+
+```
+# Базовый URL для запросов к бэкенду
+VITE_API_BASE_URL=http://localhost:8080
+
+# Ключ для работы с Gemini AI
+VITE_GEMINI_API_KEY=ваш_ключ_здесь
+```
 
 Backend:
 
