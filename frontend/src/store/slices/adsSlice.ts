@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AdsState, ItemFilters, SingleItemGetOut } from '@types';
 
-const initialState: AdsState = {
+export const initialState: AdsState = {
   filters: {
     q: '',
     categories: [],
