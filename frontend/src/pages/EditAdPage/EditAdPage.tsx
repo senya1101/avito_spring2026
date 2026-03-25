@@ -51,23 +51,19 @@ export const EditAdPage = () => {
 
   const selectedCategory = watch('category') as Category;
 
+  const STORAGE_KEY = `ad_draft_${id}`;
+
   const validateAndSetRevision = useCallback(() => {
     const currentValues = getValues();
     const missingFields = getMissingFields(currentValues);
     setMissingFields(missingFields);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentValues));
 
     setValue('needsRevision', !!missingFields.length, {
       shouldDirty: true,
       shouldValidate: true,
     });
-  }, [getValues, setValue]);
-
-  useEffect(() => {
-    if (ad) {
-      reset(ad);
-      validateAndSetRevision();
-    }
-  }, [ad, reset, validateAndSetRevision]);
+  }, [getValues, setValue, STORAGE_KEY]);
 
   const onSubmit = async (formData: ItemUpdateIn) => {
     const msgKey = 'update_toast';
@@ -84,7 +80,7 @@ export const EditAdPage = () => {
         key: msgKey,
         duration: 3,
       });
-
+      localStorage.removeItem(STORAGE_KEY);
       navigate(`/ads/${ad!.id}`);
     } catch (error) {
       message.error({
@@ -94,6 +90,24 @@ export const EditAdPage = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (ad) {
+      const savedDraft = localStorage.getItem(STORAGE_KEY);
+      if (savedDraft) {
+        try {
+          const parsedDraft = JSON.parse(savedDraft);
+          reset(parsedDraft);
+          message.info('Черновик восстановлен');
+        } catch (e) {
+          reset(ad);
+        }
+      } else {
+        reset(ad);
+      }
+      validateAndSetRevision();
+    }
+  }, [ad, reset, validateAndSetRevision, STORAGE_KEY]);
 
   if (isFetching)
     return (
@@ -105,154 +119,166 @@ export const EditAdPage = () => {
     return <Layout style={{ padding: 24 }}>Ошибка загрузки данных</Layout>;
 
   return (
-    <Layout style={{ padding: '24px' }}>
-      <Flex gap={40} align="start">
-        <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 800 }}>
-          <Typography.Title level={3}>
-            Редактирование объявления
-          </Typography.Title>
+    <Layout
+      style={{
+        padding: '24px',
+        display: 'grid',
+        gridAutoFlow: 'column',
+        gridAutoColumns: '1fr',
+        gap: 40,
+        flexDirection: 'row',
+        alignItems: 'start',
+        width: '100%',
+      }}
+    >
+      <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: 800 }}>
+        <Typography.Title level={3}>Редактирование объявления</Typography.Title>
 
-          <Flex vertical gap={4}>
-            <Typography.Text strong>Категория</Typography.Text>
-            <Controller
-              name="category"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  style={{ width: '100%' }}
-                  options={[
-                    { label: 'Авто', value: 'auto' },
-                    { label: 'Электроника', value: 'electronics' },
-                    { label: 'Недвижимость', value: 'real_estate' },
-                  ]}
-                  onBlur={() => {
-                    field.onBlur();
-                    validateAndSetRevision();
-                  }}
-                />
-              )}
-            />
-          </Flex>
-
-          <Divider />
-
-          <Flex vertical gap={16}>
-            <Space orientation="vertical" style={{ width: '100%' }}>
-              <Typography.Text strong>Название</Typography.Text>
-              <Controller
-                name="title"
-                control={control}
-                render={({ field }) => <Input {...field} size="large" />}
+        <Flex vertical gap={4}>
+          <Typography.Text strong>Категория</Typography.Text>
+          <Controller
+            name="category"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                style={{ width: '100%' }}
+                options={[
+                  { label: 'Авто', value: 'auto' },
+                  { label: 'Электроника', value: 'electronics' },
+                  { label: 'Недвижимость', value: 'real_estate' },
+                ]}
+                onBlur={() => {
+                  field.onBlur();
+                  validateAndSetRevision();
+                }}
               />
-            </Space>
-
-            <Space orientation="vertical" style={{ width: '100%' }}>
-              <Typography.Text strong>Цена (₽)</Typography.Text>
-              <Flex align="center" gap={8}>
-                <Controller
-                  name="price"
-                  control={control}
-                  render={({ field }) => (
-                    <InputNumber
-                      {...field}
-                      style={{ width: '100%' }}
-                      onBlur={() => {
-                        field.onBlur();
-                        validateAndSetRevision();
-                      }}
-                    />
-                  )}
-                />
-                <AiPrompt<number>
-                  label="Узнать рыночную цену"
-                  fieldName="price"
-                  aiValue={price.value}
-                  aiDisplayValue={price.display}
-                  isLoading={price.isLoading}
-                  isError={price.isError}
-                  onFetch={() => dispatch(fetchAiPrice(watch()))}
-                  onApply={(val) => {
-                    setValue('price', val);
-                    dispatch(clearAiData());
-                  }}
-                  onCancel={() => dispatch(clearAiData())}
-                />
-              </Flex>
-            </Space>
-          </Flex>
-
-          <Divider />
-
-          <Typography.Title level={5} style={{ marginTop: 24 }}>
-            Характеристики
-          </Typography.Title>
-
-          <Flex gap={12} vertical>
-            {CATEGORY_FIELDS[selectedCategory || ad.category]?.map(
-              (fieldName) => {
-                const meta = FIELD_METADATA[fieldName];
-                if (!meta) return null;
-
-                return (
-                  <DynamicField
-                    key={fieldName}
-                    name={fieldName}
-                    label={meta.label}
-                    type={meta.type}
-                    options={meta.options}
-                    control={control as unknown as Control}
-                    onBlur={validateAndSetRevision}
-                  />
-                );
-              },
             )}
-          </Flex>
+          />
+        </Flex>
 
-          <Divider />
+        <Divider />
+
+        <Flex vertical gap={16}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
+            <Typography.Text strong>Название</Typography.Text>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => <Input {...field} size="large" />}
+            />
+          </Space>
 
           <Space orientation="vertical" style={{ width: '100%' }}>
-            <Space orientation="vertical" style={{ width: '100%' }}>
+            <Typography.Text strong>Цена (₽)</Typography.Text>
+            <Flex align="center" gap={8}>
               <Controller
-                name="description"
+                name="price"
                 control={control}
-                render={({ field }) => <Input.TextArea {...field} rows={6} />}
+                render={({ field }) => (
+                  <InputNumber
+                    {...field}
+                    style={{ width: '100%' }}
+                    onBlur={() => {
+                      field.onBlur();
+                      validateAndSetRevision();
+                    }}
+                  />
+                )}
               />
-              <AiPrompt<string>
-                label="Улучшить описание"
-                fieldName="description"
-                aiValue={description.value}
-                aiDisplayValue={description.value}
-                isLoading={description.isLoading}
-                isError={description.isError}
-                onFetch={() => dispatch(fetchAiDescription(watch()))}
+              <AiPrompt<number>
+                label="Узнать рыночную цену"
+                fieldName="price"
+                aiValue={price.value}
+                aiDisplayValue={price.display}
+                isLoading={price.isLoading}
+                isError={price.isError}
+                onFetch={() => dispatch(fetchAiPrice(watch()))}
                 onApply={(val) => {
-                  setValue('description', val);
+                  setValue('price', val);
                   dispatch(clearAiData());
                 }}
                 onCancel={() => dispatch(clearAiData())}
               />
-            </Space>
+            </Flex>
           </Space>
+        </Flex>
 
-          <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size="large"
-              loading={isUpdating}
-            >
-              Сохранить
-            </Button>
-            <Button size="large" onClick={() => navigate(-1)}>
-              Отменить
-            </Button>
-          </div>
-        </form>
-        <div style={{ width: 300, position: 'sticky', top: 24 }}>
-          <RevisionState missingFields={missingFields} />
+        <Divider />
+
+        <Typography.Title level={5} style={{ marginTop: 24 }}>
+          Характеристики
+        </Typography.Title>
+
+        <Flex gap={12} vertical>
+          {CATEGORY_FIELDS[selectedCategory || ad.category]?.map(
+            (fieldName) => {
+              const meta = FIELD_METADATA[fieldName];
+              if (!meta) return null;
+
+              return (
+                <DynamicField
+                  key={fieldName}
+                  name={fieldName}
+                  label={meta.label}
+                  type={meta.type}
+                  options={meta.options}
+                  control={control as unknown as Control}
+                  onBlur={validateAndSetRevision}
+                />
+              );
+            },
+          )}
+        </Flex>
+
+        <Divider />
+
+        <Space orientation="vertical" style={{ width: '100%' }}>
+          <Space orientation="vertical" style={{ width: '100%' }}>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => <Input.TextArea {...field} rows={6} />}
+            />
+            <AiPrompt<string>
+              label="Улучшить описание"
+              fieldName="description"
+              aiValue={description.value}
+              aiDisplayValue={description.value}
+              isLoading={description.isLoading}
+              isError={description.isError}
+              onFetch={() => dispatch(fetchAiDescription(watch()))}
+              onApply={(val) => {
+                setValue('description', val);
+                dispatch(clearAiData());
+              }}
+              onCancel={() => dispatch(clearAiData())}
+            />
+          </Space>
+        </Space>
+
+        <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            loading={isUpdating}
+          >
+            Сохранить
+          </Button>
+          <Button
+            size="large"
+            onClick={() => {
+              localStorage.removeItem(STORAGE_KEY);
+              navigate(-1);
+            }}
+          >
+            Отменить
+          </Button>
         </div>
-      </Flex>
+      </form>
+
+      <RevisionState missingFields={missingFields} />
     </Layout>
   );
 };
